@@ -1,0 +1,36 @@
+{
+  "name": "meo-wifi-login",
+  "version": "1.0.0",
+  "description": "Allows for an automated login through a MEO Wifi Premium hotspot",
+  "main": "dist/meo_wifi_login.js",
+  "scripts": {
+    "babel": "babel src/meo-wifi-login.ts --out-file dist/meo-wifi-login.js",
+    "start": "node dist/meo-wifi-login.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Darguima/meo-wifi-login-js.git"
+  },
+  "author": "Darguima",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Darguima/meo-wifi-login-js/issues"
+  },
+  "homepage": "https://github.com/Darguima/meo-wifi-login-js#readme",
+  "dependencies": {
+    "typescript": "^4.6.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.18.0",
+    "@babel/preset-env": "^7.18.0",
+    "@babel/preset-typescript": "^7.17.12",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
+    "eslint": "^8.16.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.0",
+    "eslint-plugin-promise": "^6.0.0"
+  }
+}
