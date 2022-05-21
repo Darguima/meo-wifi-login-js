@@ -1,8 +1,9 @@
 {
   "name": "meo-wifi-login",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Allows for an automated login through a MEO Wifi Premium hotspot",
-  "main": "lib/meo_wifi_login.js",
+  "main": "lib/meo-wifi-login.js",
+  "types": "lib/meo-wifi-login.d.ts",
   "scripts": {
     "babel": "babel src/meo-wifi-login.ts --out-file lib/meo-wifi-login.js",
     "build": "npm run babel; tsc",
@@ -19,10 +20,10 @@
   },
   "homepage": "https://github.com/Darguima/meo-wifi-login-js#readme",
   "dependencies": {
-    "crypto-js": "^4.1.1",
-    "typescript": "^4.6.4"
+    "crypto-js": "^4.1.1"
   },
   "devDependencies": {
+    "typescript": "^4.6.4",
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.18.0",
     "@babel/preset-env": "^7.18.0",
