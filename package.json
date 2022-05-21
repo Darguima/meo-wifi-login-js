@@ -4,8 +4,9 @@
   "description": "Allows for an automated login through a MEO Wifi Premium hotspot",
   "main": "lib/meo_wifi_login.js",
   "scripts": {
-    "build": "babel src/meo-wifi-login.ts --out-file lib/meo-wifi-login.js",
-    "run": "node lib/meo-wifi-login.js"
+    "babel": "babel src/meo-wifi-login.ts --out-file lib/meo-wifi-login.js",
+    "build": "npm run babel; tsc",
+    "start": "npm run babel; node lib/meo-wifi-login.js"
   },
   "repository": {
     "type": "git",

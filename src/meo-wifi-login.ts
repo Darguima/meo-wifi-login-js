@@ -1,5 +1,5 @@
-import https from 'https'
-import CryptoJS from 'crypto-js'
+import * as https from 'https'
+import * as CryptoJS from 'crypto-js'
 // https://cryptojs.gitbook.io/docs/#ciphers
 
 interface meoLoginResponse {
@@ -23,7 +23,7 @@ interface loginResponse {
   cryptoPassword: string
 }
 
-const meoWifiLogoff = (): Promise<logoffResponse> => {
+export const meoWifiLogoff = (): Promise<logoffResponse> => {
   // https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Logoff?callback=foo
   return new Promise((resolve, reject) => {
     const req = https.request(
@@ -45,7 +45,7 @@ const meoWifiLogoff = (): Promise<logoffResponse> => {
 
           resolve({
             success: response,
-            statusCode: res.statusCode,
+            statusCode: res.statusCode || 0,
             url: `https://${req.host}${req.path}`
           })
         })
@@ -58,7 +58,7 @@ const meoWifiLogoff = (): Promise<logoffResponse> => {
   })
 }
 
-const encryptPassword = (password: string, ip: string) => {
+export const encryptPassword = (password: string, ip: string) => {
   const iv = CryptoJS.enc.Hex.parse('72c4721ae01ae0e8e84bd64ad66060c4')
   const salt = CryptoJS.enc.Hex.parse('77232469666931323429396D656F3938574946')
 
@@ -69,7 +69,7 @@ const encryptPassword = (password: string, ip: string) => {
   return crypto.ciphertext.toString(CryptoJS.enc.Base64)
 }
 
-const meoWifiLogin = (username: string, password: string, ip: string): Promise<loginResponse> => {
+export const meoWifiLogin = (username: string, password: string, ip: string): Promise<loginResponse> => {
   const cryptoPassword = encryptPassword(password, ip)
 
   // https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${username}&password=${cryptoPassword}&navigatorLang=pt&callback=foo
@@ -94,7 +94,7 @@ const meoWifiLogin = (username: string, password: string, ip: string): Promise<l
           resolve({
             success: response.result,
             response,
-            statusCode: res.statusCode,
+            statusCode: res.statusCode || 0,
             url: `https://${req.host}${req.path}`,
             cryptoPassword
           })
@@ -107,13 +107,3 @@ const meoWifiLogin = (username: string, password: string, ip: string): Promise<l
     req.end()
   })
 }
-
-meoWifiLogin(
-  'dsgdevbraga@gmail.com',
-  'password',
-  '10.23.24.25'
-)
-  .then(r => console.log(JSON.stringify(r, null, 2)))
-
-meoWifiLogoff()
-  .then(r => console.log(JSON.stringify(r, null, 2)))
