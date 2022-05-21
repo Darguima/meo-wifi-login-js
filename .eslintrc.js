@@ -7,6 +7,9 @@ module.exports = {
   extends: [
     'standard'
   ],
+  ignore: [
+    '/dist'
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
