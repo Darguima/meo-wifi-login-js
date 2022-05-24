@@ -1,4 +1,4 @@
-import * as https from 'https'
+import axios from 'axios'
 import * as CryptoJS from 'crypto-js'
 // https://cryptojs.gitbook.io/docs/#ciphers
 
@@ -23,39 +23,23 @@ interface loginResponse {
   cryptoPassword: string
 }
 
-export const meoWifiLogoff = (): Promise<logoffResponse> => {
+export const meoWifiLogoff = async (): Promise<logoffResponse> => {
   // https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Logoff?callback=foo
-  return new Promise((resolve, reject) => {
-    const req = https.request(
-      {
-        host: 'servicoswifi.apps.meo.pt',
-        path: '/HotspotConnection.svc/Logoff?callback=foo',
-        port: 443,
-        method: 'GET',
-        headers: { 'user-agent': 'node.js' }
-      },
-
-      res => {
-        res.setEncoding('utf8')
-
-        res.on('data', (body: string) => {
-          const response: boolean = JSON.parse(
-            body.substring(0, body.length - 2).replace('foo(', '')
-          )
-
-          resolve({
-            success: response,
-            statusCode: res.statusCode || 0,
-            url: `https://${req.host}${req.path}`
-          })
-        })
+  const { data, status, request } = await axios.get<string>(
+    'https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Logoff', {
+      params: {
+        callback: 'foo'
       }
-    )
+    }
+  )
 
-    req.on('error', e => reject(e))
+  const meoResponse: boolean = JSON.parse(data.substring(0, data.length - 2).replace('foo(', ''))
 
-    req.end()
-  })
+  return {
+    success: meoResponse,
+    statusCode: status,
+    url: request?.res?.responseUrl || ''
+  }
 }
 
 export const encryptPassword = (password: string, ip: string) => {
@@ -69,41 +53,28 @@ export const encryptPassword = (password: string, ip: string) => {
   return crypto.ciphertext.toString(CryptoJS.enc.Base64)
 }
 
-export const meoWifiLogin = (username: string, password: string, ip: string): Promise<loginResponse> => {
+export const meoWifiLogin = async (username: string, password: string, ip: string): Promise<loginResponse> => {
   const cryptoPassword = encryptPassword(password, ip)
 
   // https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${username}&password=${cryptoPassword}&navigatorLang=pt&callback=foo
-  return new Promise((resolve, reject) => {
-    const req = https.request(
-      {
-        host: 'servicoswifi.apps.meo.pt',
-        path: `/HotspotConnection.svc/Login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(cryptoPassword)}&navigatorLang=pt&callback=foo`,
-        port: 443,
-        method: 'GET',
-        headers: { 'user-agent': 'node.js' }
-      },
-
-      res => {
-        res.setEncoding('utf8')
-
-        res.on('data', (body: string) => {
-          const response: meoLoginResponse = JSON.parse(
-            body.substring(0, body.length - 2).replace('foo(', '')
-          )
-
-          resolve({
-            success: response.result,
-            response,
-            statusCode: res.statusCode || 0,
-            url: `https://${req.host}${req.path}`,
-            cryptoPassword
-          })
-        })
+  const { data, status, request } = await axios.get<string>(
+    'https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login', {
+      params: {
+        username,
+        password: cryptoPassword,
+        navigatorLang: 'pt',
+        callback: 'foo'
       }
-    )
+    }
+  )
 
-    req.on('error', e => reject(e))
+  const meoResponse: meoLoginResponse = JSON.parse(data.substring(0, data.length - 2).replace('foo(', ''))
 
-    req.end()
-  })
+  return {
+    success: meoResponse.result,
+    response: meoResponse,
+    statusCode: status,
+    url: request?.res?.responseUrl || '',
+    cryptoPassword
+  }
 }

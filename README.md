@@ -161,6 +161,7 @@ crypto.ciphertext.toString(CryptoJS.enc.Base64) // Encrypted Password
 If you want to contribute, or if you want to know for where is this project going on, this are the next steps:
 
 - [x] Basic Javascript Package to login an logout from `Meo Wifi`
+- [ ] Remove axios as a dependency
 - [ ] Verify if user is really connected to `Meo Wifi`
 - [ ] Detect user IP (and not receive it as a parameter)
 - [ ] Handle with `Meo Wifi` connect errors
