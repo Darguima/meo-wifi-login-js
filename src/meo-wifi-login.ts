@@ -38,7 +38,7 @@ export const meoWifiLogoff = async (): Promise<logoffResponse> => {
   return {
     success: meoResponse,
     statusCode: status,
-    url: request?.res?.responseUrl || ''
+    url: request.res?.responseUrl || request.responseURL || ''
   }
 }
 
@@ -74,7 +74,7 @@ export const meoWifiLogin = async (username: string, password: string, ip: strin
     success: meoResponse.result,
     response: meoResponse,
     statusCode: status,
-    url: request?.res?.responseUrl || '',
+    url: request.res?.responseUrl || request.responseURL || '',
     cryptoPassword
   }
 }
