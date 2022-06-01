@@ -21,6 +21,7 @@ My main motivation with this is another (yet private) project.
 - [Usage](#usage)
 - [Quick Example](#quick-example-)
 - [API](#api-)
+- [Tests](#tests-)
 - [To Do](#to-do-)
 - [License](#license-)
 - [Thanks](#thanks-)
@@ -156,6 +157,32 @@ crypto.ciphertext.toString(CryptoJS.enc.Base64) // Encrypted Password
 
 ---
 
+## Tests 🧪
+
+You have 2 types of tests:
+
+#### Tests for when you are connected on `MEO WIFI Network`
+
+You can run these tests to check the login, logout and invalid logins when you are on the `MEO WIFI Network`, to know if the package really does what it is supposed to do
+
+Just Run:
+
+```bash
+$ npm run test-insideNet
+```
+
+#### Tests for when you are NOT connected on `MEO WIFI Network`
+
+You can run these tests to check the login and logout when you are NOT on the `MEO WIFI Network`, to know if you receive the correct message (`OUT OF REACH`) for the situation.
+
+Just Run:
+
+```bash
+$ npm run test-outsideNet
+```
+
+---
+
 ## To Do 📝
 
 If you want to contribute, or if you want to know for where is this project going on, this are the next steps:
@@ -165,7 +192,7 @@ If you want to contribute, or if you want to know for where is this project goin
 - [ ] Verify if user is really connected to `Meo Wifi`
 - [ ] Detect user IP (and not receive it as a parameter)
 - [ ] Handle with `Meo Wifi` connect errors
-- [ ] Create tests files
+- [x] Create tests files
 
 ---
 
