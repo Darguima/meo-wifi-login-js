@@ -13,15 +13,20 @@ jest.setTimeout(50000)
 describe('Test Login OUTSIDE Meo Wifi Network', () => {
   test('Login', async () => {
     expect(await meoWifiLogin(MEO_USERNAME, MEO_PASSWORD, ip)).toEqual({
-      cryptoPassword,
-      response: { RedirectUrlEN: '/en/welcome', RedirectUrlPT: '/pt/bem-vindo', error: 'OUT OF REACH', result: false },
-      statusCode: 200,
       success: false,
-      url: `https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${encodeURIComponent(MEO_USERNAME)}&password=${encodeURIComponent(cryptoPassword)}&navigatorLang=pt&callback=foo`
+      message: 'Not Connected on Meo Wifi',
+      statusCode: 200,
+      url: `https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${encodeURIComponent(MEO_USERNAME)}&password=${encodeURIComponent(cryptoPassword)}&navigatorLang=pt&callback=foo`,
+      returnedIP: ip,
+      cryptoPassword
     })
   })
 
   test('Logoff', async () => {
-    expect(await meoWifiLogoff()).toEqual({ statusCode: 200, success: false, url: 'https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Logoff?callback=foo' })
+    expect(await meoWifiLogoff()).toEqual({
+      statusCode: 200,
+      success: false,
+      url: 'https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Logoff?callback=foo'
+    })
   })
 })

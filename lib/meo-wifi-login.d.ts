@@ -1,9 +1,3 @@
-interface meoLoginResponse {
-    result: boolean;
-    error: string | null;
-    RedirectUrlEN: string;
-    RedirectUrlPT: string;
-}
 interface logoffResponse {
     success: boolean;
     statusCode: number;
@@ -11,9 +5,10 @@ interface logoffResponse {
 }
 interface loginResponse {
     success: boolean;
-    response: meoLoginResponse;
+    message: string;
     statusCode: number;
     url: string;
+    returnedIP: string;
     cryptoPassword: string;
 }
 export declare const meoWifiLogoff: () => Promise<logoffResponse>;

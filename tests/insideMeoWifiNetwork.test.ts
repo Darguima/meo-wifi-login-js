@@ -17,41 +17,45 @@ describe('Test Login INSIDE Meo Wifi Network', () => {
 
   test('Login - Invalid Credentials', async () => {
     expect(await meoWifiLogin('emailfake@gmail.com', 'fake password', ip)).toEqual({
-      cryptoPassword: 'EFv31Af8mHak9xMeVQMgKg==',
-      response: { RedirectUrlEN: '/en', RedirectUrlPT: '/pt', error: 'Os dados que introduziu não são válidos. Por favor confirme os seus dados na Área de Cliente em meo.pt e efetue novo login.', result: false },
-      statusCode: 200,
       success: false,
-      url: 'https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=emailfake%40gmail.com&password=EFv31Af8mHak9xMeVQMgKg%3D%3D&navigatorLang=pt&callback=foo'
+      message: 'Invalid Credentials',
+      statusCode: 200,
+      url: `https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=emailfake%40gmail.com&password=${encodeURIComponent(encryptPassword('fake password', ip))}&navigatorLang=pt&callback=foo`,
+      returnedIP: ip,
+      cryptoPassword: encryptPassword('fake password', ip)
     })
   })
 
   test('Login - Invalid IP', async () => {
     expect(await meoWifiLogin(MEO_USERNAME, MEO_PASSWORD, '1.10.100.1000')).toEqual({
-      cryptoPassword: encryptPassword(MEO_PASSWORD, '1.10.100.1000'),
-      response: { RedirectUrlEN: '/en', RedirectUrlPT: '/pt', error: `FrammedIP: ${ip}`, result: false },
-      statusCode: 200,
       success: false,
-      url: `https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${encodeURIComponent(MEO_USERNAME)}&password=${encodeURIComponent(encryptPassword(MEO_PASSWORD, '1.10.100.1000'))}&navigatorLang=pt&callback=foo`
+      message: 'Invalid IP',
+      statusCode: 200,
+      url: `https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${encodeURIComponent(MEO_USERNAME)}&password=${encodeURIComponent(encryptPassword(MEO_PASSWORD, '1.10.100.1000'))}&navigatorLang=pt&callback=foo`,
+      returnedIP: ip,
+      cryptoPassword: encryptPassword(MEO_PASSWORD, '1.10.100.1000')
     })
   })
 
   test('Login - Success (need be logged off)', async () => {
     expect(await meoWifiLogin(MEO_USERNAME, MEO_PASSWORD, ip)).toEqual({
-      cryptoPassword,
-      response: { RedirectUrlEN: '/en/afterlogin', RedirectUrlPT: '/pt/poslogin', error: null, result: true },
-      statusCode: 200,
       success: true,
-      url: `https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${encodeURIComponent(MEO_USERNAME)}&password=${encodeURIComponent(cryptoPassword)}&navigatorLang=pt&callback=foo`
+      message: 'Success',
+      statusCode: 200,
+      url: `https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${encodeURIComponent(MEO_USERNAME)}&password=${encodeURIComponent(cryptoPassword)}&navigatorLang=pt&callback=foo`,
+      returnedIP: ip,
+      cryptoPassword
     })
   })
 
   test('Already Logged', async () => {
     expect(await meoWifiLogin(MEO_USERNAME, MEO_PASSWORD, ip)).toEqual({
-      cryptoPassword,
-      response: { RedirectUrlEN: '/en', RedirectUrlPT: '/pt', error: 'Já se encontra logado', result: false },
-      statusCode: 200,
       success: false,
-      url: `https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${encodeURIComponent(MEO_USERNAME)}&password=${encodeURIComponent(cryptoPassword)}&navigatorLang=pt&callback=foo`
+      message: 'Already Logged',
+      statusCode: 200,
+      url: `https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${encodeURIComponent(MEO_USERNAME)}&password=${encodeURIComponent(cryptoPassword)}&navigatorLang=pt&callback=foo`,
+      returnedIP: ip,
+      cryptoPassword
     })
   })
 

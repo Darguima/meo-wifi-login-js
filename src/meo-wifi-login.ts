@@ -17,9 +17,10 @@ interface logoffResponse {
 
 interface loginResponse {
   success: boolean,
-  response: meoLoginResponse,
+  message: string,
   statusCode: number,
   url: string,
+  returnedIP: string,
   cryptoPassword: string
 }
 
@@ -70,11 +71,32 @@ export const meoWifiLogin = async (username: string, password: string, ip: strin
 
   const meoResponse: meoLoginResponse = JSON.parse(data.substring(0, data.length - 2).replace('foo(', ''))
 
+  let message = ''
+  let returnedIP = ip
+
+  if (meoResponse.error === null) {
+    message = 'Success'
+  } else if (meoResponse.error === 'OUT OF REACH') {
+    message = 'Not Connected on Meo Wifi'
+  } else if (meoResponse.error.startsWith('FrammedIP: ')) {
+    message = 'Invalid IP'
+    returnedIP = meoResponse.error.substring(11)
+  } else if (meoResponse.error === 'Os dados que introduziu não são válidos. Por favor confirme os seus dados na Área de Cliente em meo.pt e efetue novo login.') {
+    message = 'Invalid Credentials'
+  } else if (meoResponse.error === 'Já se encontra logado') {
+    message = 'Already Logged'
+  } else if (meoResponse.error === 'De momento não é possível concretizar o seu pedido. Por favor, tente mais tarde.') {
+    message = 'Try again later'
+  } else {
+    message = 'Unknown Error - ' + meoResponse.error
+  }
+
   return {
     success: meoResponse.result,
-    response: meoResponse,
+    message,
     statusCode: status,
     url: request.res?.responseUrl || request.responseURL || '',
+    returnedIP,
     cryptoPassword
   }
 }

@@ -82,15 +82,22 @@ interface loginResponse {
 	// true  = connect
 	// false = error on connection
 
-	response: {
-		result: boolean; // equal to success
-		error: string | null; // reason of the error
-		RedirectUrlEN: string;
-		RedirectUrlPT: string;
-	}
+	message: string;
+	// Success
+	// Not Connected on Meo Wifi
+	// Invalid IP
+	// Invalid Credentials
+	// Already Logged
+	// Try again later
+	// Unknown Error - ...
 
 	statusCode: number; // HTTPS response status code
 	url: string; // Url requested to login
+
+	returnedIP: string; 
+	// If message == "Invalid IP", `returnIp` is changed to the correct IP
+	// Else, is the IP passed on function params
+
 	cryptoPassword: string; // encrypted password to login
 }
 ```
@@ -159,6 +166,13 @@ crypto.ciphertext.toString(CryptoJS.enc.Base64) // Encrypted Password
 
 ## Tests 🧪
 
+Firstly, to run tests, you need a valid `Meo Wifi` account. If you have, save your credentials in `./.env`:
+
+```
+MEO_USERNAME="email@email.com"
+MEO_PASSWORD="password"
+```
+
 You have 2 types of tests:
 
 #### Tests for when you are connected on `MEO WIFI Network`
@@ -191,7 +205,7 @@ If you want to contribute, or if you want to know for where is this project goin
 - [ ] Remove axios as a dependency
 - [ ] Verify if user is really connected to `Meo Wifi`
 - [ ] Detect user IP (and not receive it as a parameter)
-- [ ] Handle with `Meo Wifi` connect errors
+- [x] Handle with `Meo Wifi` connect errors
 - [x] Create tests files
 
 ---

@@ -1,6 +1,6 @@
 {
   "name": "meo-wifi-login",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Allows for an automated login through a MEO Wifi Premium hotspot",
   "main": "lib/meo-wifi-login.js",
   "types": "lib/meo-wifi-login.d.ts",
