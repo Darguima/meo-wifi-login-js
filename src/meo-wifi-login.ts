@@ -26,15 +26,23 @@ interface loginResponse {
 
 export const meoWifiLogoff = async (): Promise<logoffResponse> => {
   // https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Logoff?callback=foo
-  const { data, status, request } = await axios.get<string>(
+  const { meoResponse, status, request } = await axios.get(
     'https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Logoff', {
       params: {
         callback: 'foo'
       }
     }
   )
-
-  const meoResponse: boolean = JSON.parse(data.substring(0, data.length - 2).replace('foo(', ''))
+    .then(res => ({
+      meoResponse: JSON.parse(res.data.substring(0, res.data.length - 2).replace('foo(', '')) as boolean,
+      status: res.status,
+      request: res.request
+    }))
+    .catch(e => ({
+      meoResponse: false,
+      status: 0,
+      request: { responseURL: 'https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login/ ...' } as any
+    }))
 
   return {
     success: meoResponse,
@@ -58,7 +66,7 @@ export const meoWifiLogin = async (username: string, password: string, ip: strin
   const cryptoPassword = encryptPassword(password, ip)
 
   // https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login?username=${username}&password=${cryptoPassword}&navigatorLang=pt&callback=foo
-  const { data, status, request } = await axios.get<string>(
+  const { meoResponse, status, request } = await axios.get(
     'https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login', {
       params: {
         username,
@@ -68,8 +76,28 @@ export const meoWifiLogin = async (username: string, password: string, ip: strin
       }
     }
   )
+    .then(res => ({
+      meoResponse: JSON.parse(res.data.substring(0, res.data.length - 2).replace('foo(', '')) as meoLoginResponse,
+      status: res.status,
+      request: res.request
+    }))
+    .catch(e => {
+      let message = ''
 
-  const meoResponse: meoLoginResponse = JSON.parse(data.substring(0, data.length - 2).replace('foo(', ''))
+      if (e.message && e.message.startsWith('getaddrinfo EAI_AGAIN')) {
+        message = 'Maybe no internet connection'
+      } else if (e.message) {
+        message = e.message
+      } else {
+        message = 'Axios Error'
+      }
+
+      return {
+        meoResponse: { result: false, error: message } as meoLoginResponse,
+        status: 0,
+        request: { responseURL: 'https://servicoswifi.apps.meo.pt/HotspotConnection.svc/Login/ ...' } as any
+      }
+    })
 
   let message = ''
   let returnedIP = ip

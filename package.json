@@ -9,7 +9,8 @@
     "build": "npm run babel; tsc",
     "start": "npm run babel; node lib/meo-wifi-login.js",
     "test-insideNet": "jest -t 'Test Login INSIDE Meo Wifi Network'",
-    "test-outsideNet": "jest -t 'Test Login OUTSIDE Meo Wifi Network'"
+    "test-outsideNet": "jest -t 'Test Login OUTSIDE Meo Wifi Network'",
+    "test-withoutNet": "jest -t 'Test Login WITHOUT Network'"
   },
   "repository": {
     "type": "git",

@@ -89,6 +89,7 @@ interface loginResponse {
 	// Invalid Credentials
 	// Already Logged
 	// Try again later
+	// Unknown Error - Maybe no internet connection
 	// Unknown Error - ...
 
 	statusCode: number; // HTTPS response status code
@@ -203,7 +204,7 @@ If you want to contribute, or if you want to know for where is this project goin
 
 - [x] Basic Javascript Package to login an logout from `Meo Wifi`
 - [ ] Remove axios as a dependency
-- [ ] Verify if user is really connected to `Meo Wifi`
+- [x] Verify if user is really connected to `Meo Wifi`
 - [ ] Detect user IP (and not receive it as a parameter)
 - [x] Handle with `Meo Wifi` connect errors
 - [x] Create tests files
